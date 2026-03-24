@@ -133,6 +133,7 @@ export const TreeView: React.FunctionComponent<TreeViewProps> = ({
   activeItems,
   compareItems = (item, itemToCheck) => item.id === itemToCheck.id,
   className,
+  id,
   useMemo,
   'aria-label': ariaLabel,
   'aria-labelledby': ariaLabelledby,
@@ -216,6 +217,7 @@ export const TreeView: React.FunctionComponent<TreeViewProps> = ({
           hasGuides={hasGuides}
           variant={variant}
           className={className}
+          id={id}
           {...props}
         >
           {treeViewList}

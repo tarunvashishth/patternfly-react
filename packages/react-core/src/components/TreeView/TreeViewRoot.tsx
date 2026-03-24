@@ -16,6 +16,8 @@ export interface TreeViewRootProps {
   variant?: 'default' | 'compact' | 'compactNoBackground';
   /** Class to add to add if not passed a parentItem */
   className?: string;
+  /** ID of the tree view root wrapper. */
+  id?: string;
   /** Flag indicating that tree nodes should be independently selectable, even when having children */
   hasSelectableNodes?: boolean;
 }
