@@ -419,7 +419,6 @@ class Tabs extends Component<TabsProps, TabsState> {
 
   componentDidMount() {
     if (!this.props.isVertical) {
-      // observe the tab list itself so overflow updates when its container resizes, not just the window
       this.observer = getResizeObserver(this.tabList.current, this.handleResize, true);
       this.direction = getLanguageDirection(this.tabList.current);
       // call the handle resize function to check if scroll buttons should be shown

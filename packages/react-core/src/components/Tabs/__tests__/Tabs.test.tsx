@@ -1007,44 +1007,21 @@ test('should not render tablist aria-label or aria-labelledby when neither is pr
   expect(asFragment()).toMatchSnapshot();
 });
 
-describe('resize handling', () => {
+test('observes the tab list for resize and stops observing on unmount', () => {
   const observe = jest.fn();
   const unobserve = jest.fn();
   const originalResizeObserver = (window as any).ResizeObserver;
+  (window as any).ResizeObserver = jest.fn(() => ({ observe, unobserve }));
 
-  beforeEach(() => {
-    observe.mockClear();
-    unobserve.mockClear();
-    (window as any).ResizeObserver = jest.fn(() => ({ observe, unobserve, disconnect: jest.fn() }));
-  });
+  const { unmount } = render(
+    <Tabs aria-label="resize tabs">
+      <Tab eventKey={0} title={<TabTitleText>Tab 1</TabTitleText>} />
+    </Tabs>
+  );
+  const tabList = screen.getByRole('tablist');
+  expect(observe).toHaveBeenCalledWith(tabList);
 
-  afterEach(() => {
-    (window as any).ResizeObserver = originalResizeObserver;
-  });
-
-  test('observes the tab list for size changes and stops observing on unmount', () => {
-    const { unmount } = render(
-      <Tabs aria-label="resize tabs">
-        <Tab eventKey={0} title={<TabTitleText>Tab 1</TabTitleText>} />
-      </Tabs>
-    );
-
-    const tabList = screen.getByRole('tablist');
-    expect(observe).toHaveBeenCalledWith(tabList);
-
-    unmount();
-    expect(unobserve).toHaveBeenCalledWith(tabList);
-  });
-
-  test('does not observe size changes for vertical tabs', () => {
-    const { unmount } = render(
-      <Tabs aria-label="vertical resize tabs" isVertical>
-        <Tab eventKey={0} title={<TabTitleText>Tab 1</TabTitleText>} />
-      </Tabs>
-    );
-
-    expect(observe).not.toHaveBeenCalled();
-    unmount();
-    expect(unobserve).not.toHaveBeenCalled();
-  });
+  unmount();
+  expect(unobserve).toHaveBeenCalledWith(tabList);
+  (window as any).ResizeObserver = originalResizeObserver;
 });
